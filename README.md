@@ -33,12 +33,12 @@ Liquidity Profit Calculator is a Chrome extension that calculates liquidity prof
 
 ## Files
 
-- [manifest.json](http://_vscodecontentref_/0): Contains the extension's metadata and permissions.
-- [popup.html](http://_vscodecontentref_/1): The HTML file for the extension's popup.
-- [popup.js](http://_vscodecontentref_/2): The JavaScript file for the extension's popup logic.
-- [style.css](http://_vscodecontentref_/3): The CSS file for the extension's popup styling.
-- [background.js](http://_vscodecontentref_/4): The background script for the extension.
-- [content.js](http://_vscodecontentref_/5): The content script that extracts data from lp.chainflip.io.
+- [manifest.json](./manifest.json): Contains the extension's metadata and permissions.
+- [popup.html](./popup.html): The HTML file for the extension's popup.
+- [popup.js](./popup.js): The JavaScript file for the extension's popup logic.
+- [style.css](./style.css): The CSS file for the extension's popup styling.
+- [background.js](./background.js): The background script for the extension.
+- [content.js](./content.js): The content script that extracts data from lp.chainflip.io.
 
 ## Development
 
