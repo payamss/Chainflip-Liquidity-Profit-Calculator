@@ -1,3 +1,24 @@
+function calculateColorWideRange(apr, minApr, maxApr) {
+  // Normalize APR to a scale from -1 to 1 (centered at 0%)
+  const normalized = (apr - minApr) / (maxApr - minApr); // Range [-1, 1]
+
+  let red, green;
+
+  if (apr < 0) {
+    // Negative APR: Red to White
+    const negativeNormalized = Math.abs(apr) / Math.abs(minApr);
+    red = 255;
+    green = Math.floor(negativeNormalized * 255); // Green increases toward white
+  } else {
+    // Positive APR: White to Green
+    const positiveNormalized = apr / maxApr;
+    green = 255;
+    red = Math.floor(255 - positiveNormalized * 255); // Red decreases toward green
+  }
+
+  return `rgba(${red}, ${green}, 255, 0.5)`; // Include 50% opacity
+}
+
 document.getElementById("calculateBtn").addEventListener("click", () => {
   const spinner = document.getElementById("spinner");
   const resultsTable = document.getElementById("resultsTable");
@@ -15,6 +36,10 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
         if (response) {
           resultsBody.innerHTML = ""; // Clear previous results
 
+          // Determine min and max APR for -500% to +500% range
+          const minApr = -500;
+          const maxApr = 500;
+
           response.forEach((data, index) => {
             const value = parseFloat(
               data.value.replace("$", "").replace(",", "")
@@ -23,22 +48,8 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
               return sum + parseFloat(fee.replace(/[^0-9.]/g, ""));
             }, 0);
 
-            const createdDate = new Date(data.created); // Parse creation time
-            const currentTime = new Date();
-            const hoursElapsed =
-              Math.abs(currentTime - createdDate) / (1000 * 60 * 60); // Hours elapsed
-
-            let dpr, mpr, apr;
-            if (hoursElapsed >= 24) {
-              // For pools older than a day
-              dpr = ((fees / value) * 100).toFixed(2);
-            } else {
-              // For pools less than a day, annualize fees
-              dpr = ((fees / value) * (24 / hoursElapsed) * 100).toFixed(2);
-            }
-
-            mpr = (dpr * 30).toFixed(2); // Monthly Percentage Rate
-            apr = (dpr * 365).toFixed(2); // Annual Percentage Rate
+            const apr = ((fees / value) * 365 * 100).toFixed(2); // Annual Percentage Rate
+            const color = calculateColorWideRange(apr, minApr, maxApr); // Get color with white midpoint
 
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -47,9 +58,11 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
                 .split(" ")
                 .join("<br>")}</td> <!-- Display assets in two lines -->
               <td>${data.value}</td>
-              <td>${dpr}%</td> <!-- DPR -->
-              <td>${mpr}%</td> <!-- MPR -->
-              <td>${apr}%</td> <!-- APR -->
+              <td>${((fees / value) * (24 / (365 * 24)) * 100).toFixed(
+                2
+              )}%</td> <!-- DPR -->
+              <td>${((fees / value) * 30).toFixed(2)}%</td> <!-- MPR -->
+              <td style="background-color: ${color}; color: black;">${apr}%</td> <!-- APR with color -->
               <td>${data.status}</td>
             `;
             resultsBody.appendChild(row);

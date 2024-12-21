@@ -48,10 +48,16 @@ button:hover {
 }
 
 .results-table td {
-  background-color: #2b2b3d;
-  color: #ffffff;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #3a3a56;
+}
+
+.results-table td[style*="background-color"] {
+  font-weight: bold;
+  color: white; /* White text for better readability */
+  text-align: center;
+  border-radius: 4px; /* Rounded corners */
 }
 
 .spinner-border {
