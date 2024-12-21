@@ -1,6 +1,6 @@
 function calculateColorWideRange(apr, minApr, maxApr) {
   // Normalize APR to a scale from -1 to 1 (centered at 0%)
-  const normalized = (apr - minApr) / (maxApr - minApr); // Range [-1, 1]
+  const normalized = (apr - minApr) / (maxApr - minApr);
 
   let red, green;
 
@@ -49,6 +49,8 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
             }, 0);
 
             const apr = ((fees / value) * 365 * 100).toFixed(2); // Annual Percentage Rate
+            const mpr = (apr / 12).toFixed(2); // Monthly Percentage Rate
+            const dpr = (apr / 365).toFixed(2); // Daily Percentage Rate
             const color = calculateColorWideRange(apr, minApr, maxApr); // Get color with white midpoint
 
             const row = document.createElement("tr");
@@ -58,10 +60,8 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
                 .split(" ")
                 .join("<br>")}</td> <!-- Display assets in two lines -->
               <td>${data.value}</td>
-              <td>${((fees / value) * (24 / (365 * 24)) * 100).toFixed(
-                2
-              )}%</td> <!-- DPR -->
-              <td>${((fees / value) * 30).toFixed(2)}%</td> <!-- MPR -->
+              <td>${dpr}%</td> <!-- DPR -->
+              <td>${mpr}%</td> <!-- MPR -->
               <td style="background-color: ${color}; color: black;">${apr}%</td> <!-- APR with color -->
               <td>${data.status}</td>
             `;
