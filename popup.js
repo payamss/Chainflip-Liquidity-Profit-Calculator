@@ -1,16 +1,37 @@
+// Function to calculate the number of days passed
+function calculateDaysPassed(createdDate) {
+  const created = new Date(createdDate);
+  const now = new Date();
+  const diffTime = Math.abs(now - created);
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+}
+
+// Function to calculate average DPR
+function calculateAverageDPR(totalFees, value, daysPassed) {
+  return ((totalFees / value / daysPassed) * 100).toFixed(2); // Daily Percentage Rate
+}
+
+// Function to calculate MPR from average DPR
+function calculateMPRFromDPR(dpr) {
+  return (dpr * 30).toFixed(2); // Monthly Percentage Rate
+}
+
+// Function to calculate APR from average DPR
+function calculateAPRFromDPR(dpr) {
+  return (dpr * 365).toFixed(2); // Annual Percentage Rate
+}
+
+// Function to calculate color for wide range of APR
 function calculateColorWideRange(apr, minApr, maxApr) {
-  // Normalize APR to a scale from -1 to 1 (centered at 0%)
   const normalized = (apr - minApr) / (maxApr - minApr);
 
   let red, green;
 
   if (apr < 0) {
-    // Negative APR: Red to White
     const negativeNormalized = Math.abs(apr) / Math.abs(minApr);
     red = 255;
     green = Math.floor(negativeNormalized * 255); // Green increases toward white
   } else {
-    // Positive APR: White to Green
     const positiveNormalized = apr / maxApr;
     green = 255;
     red = Math.floor(255 - positiveNormalized * 255); // Red decreases toward green
@@ -19,6 +40,7 @@ function calculateColorWideRange(apr, minApr, maxApr) {
   return `rgba(${red}, ${green}, 255, 0.5)`; // Include 50% opacity
 }
 
+// Event listener for "Calculate Profits" button
 document.getElementById("calculateBtn").addEventListener("click", () => {
   const spinner = document.getElementById("spinner");
   const resultsTable = document.getElementById("resultsTable");
@@ -40,7 +62,7 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
           const minApr = -500;
           const maxApr = 500;
 
-          response.forEach((data, index) => {
+          response.forEach((data) => {
             const value = parseFloat(
               data.value.replace("$", "").replace(",", "")
             );
@@ -48,10 +70,11 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
               return sum + parseFloat(fee.replace(/[^0-9.]/g, ""));
             }, 0);
 
-            const apr = ((fees / value) * 365 * 100).toFixed(2); // Annual Percentage Rate
-            const mpr = (apr / 12).toFixed(2); // Monthly Percentage Rate
-            const dpr = (apr / 365).toFixed(2); // Daily Percentage Rate
-            const color = calculateColorWideRange(apr, minApr, maxApr); // Get color with white midpoint
+            const daysPassed = calculateDaysPassed(data.created); // Calculate days since pool creation
+            const avgDpr = calculateAverageDPR(fees, value, daysPassed); // Average DPR
+            const mpr = calculateMPRFromDPR(avgDpr); // Calculate MPR
+            const apr = calculateAPRFromDPR(avgDpr); // Calculate APR
+            const color = calculateColorWideRange(apr, minApr, maxApr); // Get color for APR
 
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -60,7 +83,9 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
                 .split(" ")
                 .join("<br>")}</td> <!-- Display assets in two lines -->
               <td>${data.value}</td>
-              <td>${dpr}%</td> <!-- DPR -->
+              <td>${fees}</td>
+              <td>${daysPassed} days</td> <!-- Days passed -->
+              <td>${avgDpr}%</td> <!-- Average DPR -->
               <td>${mpr}%</td> <!-- MPR -->
               <td style="background-color: ${color}; color: black;">${apr}%</td> <!-- APR with color -->
               <td>${data.status}</td>
