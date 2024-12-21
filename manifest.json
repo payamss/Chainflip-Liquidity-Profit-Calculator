@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Liquidity Profit Calculator",
+  "version": "1.0",
+  "description": "Calculates liquidity profits on lp.chainflip.io.",
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": ["https://lp.chainflip.io/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "256": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://lp.chainflip.io/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
