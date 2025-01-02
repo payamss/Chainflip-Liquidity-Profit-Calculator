@@ -101,14 +101,19 @@ document.getElementById("calculatePoolsBtn").addEventListener("click", () => {
         if (response && response.pools) {
           rankingsBody.innerHTML = ""; // Clear previous rankings
 
-          const rankedPools = response.pools.map((data) => {
+          // Filter out entries with "Range" in the pool name
+          const filteredPools = response.pools.filter(
+            (data) => !data.pool.toLowerCase().includes("range")
+          );
+
+          const rankedPools = filteredPools.map((data) => {
             const liquidity = data.deployedLiquidity || 0; // Already normalized
             const volume = data.volume24h || 0; // Already normalized
             const fees = data.fees24h || 0; // Already normalized
             const risk = data.pool.includes("USDC") || data.pool.includes("Stablecoin") ? 0 : 1;
 
             // Assuming growth is not provided in this dataset
-            const growth = 0; 
+            const growth = 0;
 
             return {
               pool: data.pool,
