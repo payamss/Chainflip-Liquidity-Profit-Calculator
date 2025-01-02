@@ -1,7 +1,19 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "extractData") {
     try {
-      // Open Orders Table
+      // Helper function to normalize monetary values
+      function normalizeAmount(amount) {
+        if (!amount) return 0;
+        amount = amount.replace(/[+$,]/g, "").trim(); // Remove $, +, and commas
+        if (amount.includes("M")) {
+          return parseFloat(amount.replace("M", "")) * 1_000_000;
+        } else if (amount.includes("K")) {
+          return parseFloat(amount.replace("K", "")) * 1_000;
+        }
+        return parseFloat(amount); // If no M or K, parse as float
+      }
+
+      // Extract Open Orders
       const openOrdersRows = document.querySelectorAll("table:first-of-type tbody tr");
       const openOrdersData = [];
       openOrdersRows.forEach((row) => {
@@ -18,7 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
       });
 
-      // Pool Table
+      // Extract Pool Data
       const poolRows = document.querySelectorAll("table:last-of-type tbody tr");
       const poolData = [];
       poolRows.forEach((row) => {
@@ -26,9 +38,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (cells.length > 0) {
           poolData.push({
             pool: cells[0]?.innerText.trim(),
-            deployedLiquidity: cells[2]?.innerText.trim(),
-            volume24h: cells[3]?.innerText.trim(),
-            fees24h: cells[4]?.innerText.trim(),
+            lastPrice: cells[1]?.innerText.trim(),
+            deployedLiquidity: normalizeAmount(cells[2]?.innerText.trim()),
+            volume24h: normalizeAmount(cells[3]?.innerText.trim()),
+            fees24h: normalizeAmount(cells[4]?.innerText.trim()),
           });
         }
       });

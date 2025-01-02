@@ -13,8 +13,9 @@ main {
 }
 
 button {
-  width: 100%;
+  width: 30%;
   padding: 12px;
+  margin-top: 10px;
   font-size: 16px;
   font-weight: bold;
   background-color: #3a3a56; /* Dark button color */

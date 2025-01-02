@@ -99,14 +99,16 @@ document.getElementById("calculatePoolsBtn").addEventListener("click", () => {
         spinnerPools.classList.add("d-none"); // Hide spinner
 
         if (response && response.pools) {
-          rankingsBody.innerHTML = ""; // Clear previous data
+          rankingsBody.innerHTML = ""; // Clear previous rankings
 
           const rankedPools = response.pools.map((data) => {
-            const liquidity = parseFloat(data.deployedLiquidity.replace(/[$,]/g, ""));
-            const volume = parseFloat(data.volume24h.replace(/[$,]/g, ""));
-            const fees = parseFloat(data.fees24h.replace(/[$,]/g, ""));
-            const growth = parseFloat(data.growth || "0"); // Handle missing growth
+            const liquidity = data.deployedLiquidity || 0; // Already normalized
+            const volume = data.volume24h || 0; // Already normalized
+            const fees = data.fees24h || 0; // Already normalized
             const risk = data.pool.includes("USDC") || data.pool.includes("Stablecoin") ? 0 : 1;
+
+            // Assuming growth is not provided in this dataset
+            const growth = 0; 
 
             return {
               pool: data.pool,
@@ -120,6 +122,7 @@ document.getElementById("calculatePoolsBtn").addEventListener("click", () => {
           // Sort pools by score in descending order
           rankedPools.sort((a, b) => b.score - a.score);
 
+          // Render Rankings
           rankedPools.forEach((pool) => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -134,7 +137,7 @@ document.getElementById("calculatePoolsBtn").addEventListener("click", () => {
 
           poolsTable.classList.remove("d-none"); // Show table
         } else {
-          console.error("No data for Pools.");
+          console.error("No pool data received.");
         }
       }
     );
