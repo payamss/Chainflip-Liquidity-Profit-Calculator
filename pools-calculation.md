@@ -106,6 +106,15 @@ The formula for calculating the score is as follows:
 
 ---
 
+## Updated Table Columns:
+To include the **Volume-to-Liquidity Ratio (V/L)** in the table, the columns will be:
+
+| Pool          | Deployed Liquidity | Volume (24H) | Fees (24H) | V/L   | Score  |
+|---------------|--------------------|--------------|------------|-------|--------|
+| Example Pool  | $1,000,000         | $500,000     | $1,000     | 0.5   | 304.1  |
+
+---
+
 ## Notes:
 - The weights (\(w_1, w_2, w_3, w_4\)) can be adjusted based on the investor's preferences (e.g., conservative vs. aggressive).
 - Pools with higher scores are ranked higher, indicating better investment opportunities.
