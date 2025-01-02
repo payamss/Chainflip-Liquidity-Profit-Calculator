@@ -9,9 +9,10 @@
       <h1>Profit Calculator</h1>
     </header>
     <main>
-      <button id="calculateBtn">Calculate Profits</button>
-      <div id="spinner" class="spinner-border d-none"></div>
-      <table id="resultsTable" class="results-table d-none">
+      <!-- Open Orders Section -->
+      <button id="calculateOpenOrdersBtn">Calculate Open Orders</button>
+      <div id="spinnerOrders" class="spinner-border d-none"></div>
+      <table id="openOrdersTable" class="results-table d-none">
         <thead>
           <tr>
             <th>Type</th>
@@ -25,7 +26,23 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody id="results"></tbody>
+        <tbody id="openOrders"></tbody>
+      </table>
+
+      <!-- Pools Section -->
+      <button id="calculatePoolsBtn">Calculate Pools</button>
+      <div id="spinnerPools" class="spinner-border d-none"></div>
+      <table id="poolsTable" class="results-table d-none">
+        <thead>
+          <tr>
+            <th>Pool</th>
+            <th>Deployed Liquidity</th>
+            <th>Volume (24H)</th>
+            <th>Fees (24H)</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="rankings"></tbody>
       </table>
     </main>
     <footer>
