@@ -19,16 +19,22 @@ function calculateAPRFromDPR(dpr) {
   return (dpr * 365).toFixed(2); // Annual Percentage Rate
 }
 
-// Function to calculate scores based on weighted formula
-function calculateScore(volume, liquidity, fees, growth, risk) {
-  const w1 = 0.4,
-    w2 = 0.3,
-    w3 = 0.2,
-    w4 = 0.1;
-  const volumeToLiquidity = volume / liquidity;
-  return (w1 * volumeToLiquidity + w2 * fees + w3 * growth - w4 * risk).toFixed(
-    2
-  );
+// Function to sum fees for the same coin type
+function sumFeesForSameCoin(earnedFees) {
+  let totalUSDC = 0;
+  let totalUSDT = 0;
+
+  earnedFees.split("+").forEach((fee) => {
+    fee = fee.trim();
+    if (fee.endsWith("USDC") || fee.endsWith("USDT")) {
+      const value = parseFloat(fee.replace(/[^0-9.-]+/g, "")); // Extract numeric value
+      if (fee.endsWith("USDC")) totalUSDC += value;
+      if (fee.endsWith("USDT")) totalUSDT += value;
+    }
+  });
+
+  // Treat USDC and USDT as the same for calculations
+  return totalUSDC + totalUSDT;
 }
 
 // Event listener for "Calculate Open Orders" button
@@ -54,9 +60,7 @@ document
             response.openOrders.forEach((order) => {
               if (order.type.toLowerCase() === "range") {
                 const daysPassed = calculateDaysPassed(order.created);
-                const totalFees = parseFloat(
-                  order.earnedFees.replace(/[$,]/g, "")
-                );
+                const totalFees = sumFeesForSameCoin(order.earnedFees);
                 const value = parseFloat(order.value.replace(/[$,]/g, ""));
                 const dpr = calculateAverageDPR(totalFees, value, daysPassed);
                 const mpr = calculateMPRFromDPR(dpr);
@@ -87,6 +91,17 @@ document
     });
   });
 
+// Function to calculate scores based on weighted formula
+function calculateScore(volume, liquidity, fees, growth, risk) {
+  const w1 = 0.4,
+    w2 = 0.3,
+    w3 = 0.2,
+    w4 = 0.1;
+  const volumeToLiquidity = volume / liquidity;
+  return (w1 * volumeToLiquidity + w2 * fees + w3 * growth - w4 * risk).toFixed(
+    2
+  );
+}
 // Event listener for "Calculate Pools" button
 document.getElementById("calculatePoolsBtn").addEventListener("click", () => {
   const spinnerPools = document.getElementById("spinnerPools");

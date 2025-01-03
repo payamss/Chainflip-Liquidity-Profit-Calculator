@@ -22,9 +22,7 @@ The formula for calculating the score is as follows:
    - Higher fees indicate greater returns for liquidity providers.
 
 3. **Volume Growth (24H)**:
-   \[
-   \text{Volume Growth (%) = } \frac{\text{Change in Volume}}{\text{Previous Volume}} \times 100
-   \]
+   The formula is given by: $\text{Volume Growth (\%)} = \frac{\text{Change in Volume}}{\text{Previous Volume}} \times 100$.
    - Indicates the percentage increase in trading volume over the last 24 hours.
    - Pools with higher volume growth are considered more attractive.
 

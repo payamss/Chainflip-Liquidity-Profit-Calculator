@@ -5,8 +5,17 @@ Liquidity Profit Calculator is a Chrome extension that calculates liquidity prof
 ## Features
 
 - Extracts data from lp.chainflip.io
+- Calculates Pool Scores to evaluate investment attractiveness based on metrics like Volume-to-Liquidity Ratio, Fees, and Risk Factors
 - Calculates Daily Percentage Rate (DPR), Monthly Percentage Rate (MPR), and Annual Percentage Rate (APR)
 - Displays results in a table format with color-coded APR
+
+## Documentation
+
+For detailed calculation logic and methodologies, refer to the following files:
+
+- [Open Order Calculator](./open-order-calculator.md): Explains the calculation logic for open orders, including DPR, MPR, and APR.
+- [Pools Calculation](./pools-calculation.md): Details the scoring system for pool rankings and investment attractiveness.
+
 
 ## Installation
 
@@ -23,7 +32,7 @@ Liquidity Profit Calculator is a Chrome extension that calculates liquidity prof
 
 ## Usage
 
-1. Navigate to lp.chainflip.io in your Chrome browser.
+1. Navigate to lp.chainflip.io/orders in your Chrome browser.
 
 2. Click on the Liquidity Profit Calculator extension icon in the Chrome toolbar.
 
