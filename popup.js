@@ -1,3 +1,5 @@
+import { fetchPrice, sumFeesWithDynamicPrices } from "./priceFetcher.js";
+
 // Function to calculate the number of days passed
 function calculateDaysPassed(createdDate) {
   const created = new Date(createdDate);
@@ -19,66 +21,71 @@ function calculateAPRFromDPR(dpr) {
   return (dpr * 365).toFixed(2); // Annual Percentage Rate
 }
 
-// Function to sum fees for the same coin type
-function sumFeesForSameCoin(earnedFees) {
-  let totalUSDC = 0;
-  let totalUSDT = 0;
-
-  earnedFees.split("+").forEach((fee) => {
-    fee = fee.trim();
-    if (fee.endsWith("USDC") || fee.endsWith("USDT")) {
-      const value = parseFloat(fee.replace(/[^0-9.-]+/g, "")); // Extract numeric value
-      if (fee.endsWith("USDC")) totalUSDC += value;
-      if (fee.endsWith("USDT")) totalUSDT += value;
-    }
-  });
-
-  // Treat USDC and USDT as the same for calculations
-  return totalUSDC + totalUSDT;
-}
-
 // Event listener for "Calculate Open Orders" button
 document
   .getElementById("calculateOpenOrdersBtn")
-  .addEventListener("click", () => {
+  .addEventListener("click", async () => {
     const spinnerOrders = document.getElementById("spinnerOrders");
     const openOrdersTable = document.getElementById("openOrdersTable");
     const openOrdersBody = document.getElementById("openOrders");
 
     spinnerOrders.classList.remove("d-none"); // Show spinner
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       chrome.tabs.sendMessage(
         tabs[0].id,
         { action: "extractData" },
-        (response) => {
+        async (response) => {
           spinnerOrders.classList.add("d-none"); // Hide spinner
 
           if (response && response.openOrders) {
             openOrdersBody.innerHTML = ""; // Clear previous data
 
+            // Get all unique cryptocurrency symbols from earned fees
+            const cryptoSymbols = new Set();
             response.openOrders.forEach((order) => {
               if (order.type.toLowerCase() === "range") {
-                const daysPassed = calculateDaysPassed(order.created);
-                const totalFees = sumFeesForSameCoin(order.earnedFees);
-                const value = parseFloat(order.value.replace(/[$,]/g, ""));
-                const dpr = calculateAverageDPR(totalFees, value, daysPassed);
-                const mpr = calculateMPRFromDPR(dpr);
-                const apr = calculateAPRFromDPR(dpr);
+                order.earnedFees.split("+").forEach((fee) => {
+                  const [, symbol] = fee.trim().split(" ");
+                  if (symbol) {
+                    cryptoSymbols.add(symbol.toLowerCase());
+                  }
+                });
+              }
+            });
 
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                <td>${order.type}</td>
-                <td>${order.assets}</td>
-                <td>${order.value}</td>
-                <td>${order.earnedFees}</td>
-                <td>${daysPassed} days</td>
-                <td>${dpr}%</td>
-                <td>${mpr}%</td>
-                <td>${apr}%</td>
-                <td>${order.status}</td>
-              `;
-                openOrdersBody.appendChild(row);
+            // Fetch real-time prices for all crypto symbols
+            const cryptoPrices = await fetchPrice([...cryptoSymbols]);
+
+            response.openOrders.forEach(async (order) => {
+              if (order.type.toLowerCase() === "range") {
+                const daysPassed = calculateDaysPassed(order.created);
+                try {
+                  const totalFees = await sumFeesWithDynamicPrices(
+                    order.earnedFees,
+                    [...cryptoSymbols]
+                  );
+                  const value = parseFloat(order.value.replace(/[$,]/g, ""));
+                  const dpr = calculateAverageDPR(totalFees, value, daysPassed);
+                  const mpr = calculateMPRFromDPR(dpr);
+                  const apr = calculateAPRFromDPR(dpr);
+
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+                    <td>${order.type}</td>
+                    <td>${order.assets}</td>
+                    <td>${order.value}</td>
+                    <td>${order.earnedFees}</td>
+                    <td>${daysPassed} days</td>
+                    <td>${dpr}%</td>
+                    <td>${mpr}%</td>
+                    <td>${apr}%</td>
+                    <td>${order.status}</td>
+                  `;
+                  openOrdersBody.appendChild(row);
+                } catch (error) {
+                  console.error("Error calculating total fees for order:", error);
+                }
               }
             });
 
@@ -90,6 +97,7 @@ document
       );
     });
   });
+
 
 // Function to calculate scores based on weighted formula
 function calculateScore(volume, liquidity, fees, growth, risk) {

@@ -3,8 +3,13 @@
   "name": "Liquidity Profit Calculator",
   "version": "1.0",
   "description": "Calculates liquidity profits on lp.chainflip.io.",
-  "permissions": ["scripting", "activeTab"],
-  "host_permissions": ["https://lp.chainflip.io/*"],
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://lp.chainflip.io/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
