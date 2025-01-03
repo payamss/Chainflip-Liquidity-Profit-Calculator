@@ -43,10 +43,7 @@ For detailed calculation logic and methodologies, refer to the following files:
 
 ### Video Demo
 
-<video width="720" height="480" controls>
-  <source src="./screenshots/video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Watch the Demo](https://img.youtube.com/vi/0MfdhB6BgXw/0.jpg)](https://youtu.be/0MfdhB6BgXw)
 
 ### Extension Popup
 
