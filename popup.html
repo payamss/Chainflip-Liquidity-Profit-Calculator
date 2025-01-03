@@ -1,58 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Profit Calculator</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Profit Calculator</h1>
-    </header>
-    <main>
-      <div>
-        <p>1- go to <a href="https://lp.chainflip.io/orders" target="_blank" style="color: aqua;">chainflip Liquidity pool/orders</a> </p>
-        <p>2- wait for loading data then press calculate</p>
-      </div>
-      <!-- Open Orders Section -->
-      <button id="calculateOpenOrdersBtn">Calculate Open Orders</button>
-      <div id="spinnerOrders" class="spinner-border d-none"></div>
-      <table id="openOrdersTable" class="results-table d-none">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Assets</th>
-            <th>Value</th>
-            <th>Earned</th>
-            <th>Duration</th>
-            <th>DPR</th>
-            <th>MPR</th>
-            <th>APR</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="openOrders"></tbody>
-      </table>
 
-      <!-- Pools Section -->
-      <button id="calculatePoolsBtn">Calculate Pools</button>
-      <div id="spinnerPools" class="spinner-border d-none"></div>
-      <table id="poolsTable" class="results-table d-none">
-        <thead>
-          <tr>
-            <th>Pool</th>
-            <th>Deployed Liquidity</th>
-            <th>Volume (24H)</th>
-            <th>Fees (24H)</th>
-            <th>V(24H)/DL</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody id="rankings"></tbody>
-      </table>
-    </main>
-    <footer>
-      <p>Liquidity Profit Calculator, 2024</p>
-    </footer>
-    <script src="popup.js"></script>
-  </body>
+<head>
+  <title>Profit Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Profit Calculator</h1>
+  </header>
+  <main>
+    <div>
+      <p>1- go to <a href="https://lp.chainflip.io/orders" target="_blank" style="color: aqua;">chainflip Liquidity
+          pool/orders</a> </p>
+      <p>2- wait for loading data then press calculate</p>
+    </div>
+    <!-- Open Orders Section -->
+    <button id="calculateOpenOrdersBtn">Calculate Open Orders</button>
+    <div id="spinnerOrders" class="spinner-border d-none"></div>
+    <table id="openOrdersTable" class="results-table d-none">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Assets</th>
+          <th>Value</th>
+          <th>Earned</th>
+          <th>Duration</th>
+          <th>DPR</th>
+          <th>MPR</th>
+          <th>APR</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="openOrders"></tbody>
+    </table>
+
+    <!-- Pools Section -->
+    <button id="calculatePoolsBtn">Calculate Pools</button>
+    <div id="spinnerPools" class="spinner-border d-none"></div>
+    <table id="poolsTable" class="results-table d-none">
+      <thead>
+        <tr>
+          <th>Pool</th>
+          <th>Deployed Liquidity</th>
+          <th>Volume (24H)</th>
+          <th>Fees (24H)</th>
+          <th>V(24H)/DL</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="rankings"></tbody>
+    </table>
+  </main>
+  <footer style="display: flex; justify-content: start; align-items: center; gap: 10px;">
+    <p id="footerText"></p>
+    <a href="https://github.com/payamss/Chainflip-Liquidity-Profit-Calculator" target="_blank">
+      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"
+        style="width: 24px; height: 24px;">
+    </a>
+  </footer>
+  
+  <script src="popup.js"></script>
+  <script src="footer.js"></script>
+
+</body>
+
 </html>
