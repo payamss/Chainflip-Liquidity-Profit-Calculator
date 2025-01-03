@@ -41,17 +41,24 @@ For detailed calculation logic and methodologies, refer to the following files:
 
 ## Screenshots
 
+### Video Demo
+
+<video width="720" height="480" controls>
+  <source src="./screenshots/video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 ### Extension Popup
+
 ![Extension Popup](./screenshots/1.png)
 
 ### Open Orders Calculation
+
 ![Open Orders Calculation](./screenshots/2.png)
 
 ### Pools Score Calculation
-![Pools Score Calculation](./screenshots/3.png)
 
-### Video Demo
-![Video Demo](./screenshots/video.webm)
+![Pools Score Calculation](./screenshots/3.png)
 
 ## Files
 
